@@ -1,16 +1,17 @@
-import React from "react";
-import { TextField, Button } from "@material-ui/core";
+/* eslint-disable react/prop-types */
+import React from 'react';
+import { TextField, Button } from '@material-ui/core';
 
 function TodoForm({ addTodo, edit, handleEdit }) {
-  const [todoTitle, setTodoTitle] = React.useState(edit ? edit.title : "");
+  const [todoTitle, setTodoTitle] = React.useState(edit ? edit.title : '');
 
   const handleSubmit = () => {
     addTodo(todoTitle);
-    setTodoTitle("");
+    setTodoTitle('');
   };
 
   const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       handleSubmit();
     }
   };
@@ -26,7 +27,7 @@ function TodoForm({ addTodo, edit, handleEdit }) {
             variant="outlined"
             value={todoTitle}
             onChange={(event) => setTodoTitle(event.target.value)}
-            onKeyPress={handleEdit}
+            onKeyPress={(event) => handleEdit(event, todoTitle)}
           />
           {/* <Button variant="outlined" onClick={handleSubmit}>
             Edit task

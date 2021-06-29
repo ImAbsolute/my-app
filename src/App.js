@@ -1,12 +1,25 @@
-import React from "react";
-import Task from "./components/Task";
-import TodoForm from "./components/TodoForm";
-import "./App.css";
+import React from 'react';
+import axios from 'axios';
+import { Button } from '@material-ui/core';
+import Task from './components/Task';
+import TodoForm from './components/TodoForm';
+import './App.css';
 
 function App() {
-  const [todos, setTodos] = React.useState([
-    { id: 1, title: "1", completed: false },
-  ]);
+  const [todos, setTodos] = React.useState([]);
+  const [appState, setAppState] = React.useState();
+
+  React.useEffect(() => {
+    axios.get(process.env.REACT_APP_API_URL).then((resp) => {
+      if (resp.status === 200) {
+        setAppState(resp.data);
+      }
+    });
+  });
+
+  const getTasksFromServer = () => {
+    setTodos([...todos, ...appState]);
+  };
 
   React.useEffect(() => {
     console.log(todos);
@@ -33,32 +46,31 @@ function App() {
 
   const handleToggle = (id) => {
     setTodos([
-      ...todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : { ...todo }
-      ),
+      ...todos.map((todo) => (todo.id === id
+        ? { ...todo, completed: !todo.completed } : { ...todo })),
     ]);
   };
 
   const editTodo = (editId, editTitle) => {
-    setTodos((todo) =>
-      todo.map((item) => (item.id === editId ? editTitle : item))
-    );
+    setTodos((todo) => todo.map((item) => (item.id === editId
+      ? { id: editId, title: editTitle, completed: false }
+      : item)));
   };
 
   return (
     <div className="App">
       <TodoForm addTodo={addTodo} />
       <div className="list">
-        {todos.map((item) => (
-          <Task
-            key={item.id}
-            {...item}
-            deletTask={deletTask}
-            handleToggle={handleToggle}
-            editTodo={editTodo}
-          />
-        ))}
+        <Task
+          todos={todos}
+          deletTask={deletTask}
+          handleToggle={handleToggle}
+          editTodo={editTodo}
+        />
       </div>
+      <Button variant="outlined" onClick={getTasksFromServer}>
+        Get tasks
+      </Button>
     </div>
   );
 }
