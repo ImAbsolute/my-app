@@ -38,7 +38,7 @@ export default function Task({
           inputProps={{ 'aria-label': 'primary checkbox' }}
           onChange={() => handleToggle(todo.id)}
         />
-        <p>{todo.title}</p>
+        <p className="task-txt">{todo.title}</p>
         <div className="edit">
           <AiFillEdit onClick={() => setEdit({ id: todo.id, title: todo.title })} />
         </div>
