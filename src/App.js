@@ -1,23 +1,76 @@
-import logo from './logo.svg';
+import React from 'react';
+import axios from 'axios';
+import { Button } from '@material-ui/core';
+import Task from './components/Task';
+import TodoForm from './components/TodoForm';
 import './App.css';
+import useStyles from './styles';
 
 function App() {
+  const [todos, setTodos] = React.useState([]);
+  const [appState, setAppState] = React.useState();
+  const classes = useStyles();
+
+  React.useEffect(() => {
+    axios.get(process.env.REACT_APP_API_URL).then((resp) => {
+      if (resp.status === 200) {
+        setAppState(resp.data);
+      }
+    });
+  });
+
+  const getTasksFromServer = () => {
+    setTodos([...todos, ...appState]);
+  };
+
+  React.useEffect(() => {
+  }, [todos]);
+
+  const addTodo = (todoTitle) => {
+    if (todoTitle) {
+      setTodos([
+        ...todos,
+        {
+          id: Math.random().toString().substr(2, 9),
+          title: todoTitle,
+          completed: false,
+        },
+      ]);
+    }
+  };
+
+  const deletTask = (id) => {
+    const newTodos = todos.filter((item) => item.id !== id);
+    setTodos(newTodos);
+  };
+
+  const handleToggle = (id) => {
+    setTodos([
+      ...todos.map((todo) => (todo.id === id
+        ? { ...todo, completed: !todo.completed } : { ...todo })),
+    ]);
+  };
+
+  const editTodo = (editId, editTitle) => {
+    setTodos((todo) => todo.map((item) => (item.id === editId
+      ? { id: editId, title: editTitle, completed: false }
+      : item)));
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <TodoForm addTodo={addTodo} />
+      <div className="list">
+        <Task
+          todos={todos}
+          deletTask={deletTask}
+          handleToggle={handleToggle}
+          editTodo={editTodo}
+        />
+      </div>
+      <Button variant="outlined" onClick={getTasksFromServer} className={classes.down}>
+        Get tasks
+      </Button>
     </div>
   );
 }
