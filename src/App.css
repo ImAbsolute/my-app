@@ -21,7 +21,7 @@
 }
 
 .task {
-    width: 300px;
+    width: 400px;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -37,4 +37,9 @@
 .edit {
     align-items: center;
     display: flex;
+}
+
+.task-txt {
+    width: 250px;
+    word-break: break-all;
 }

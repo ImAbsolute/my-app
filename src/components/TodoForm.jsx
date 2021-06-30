@@ -1,9 +1,12 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import { TextField, Button } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import useStyles from '../styles';
 
 function TodoForm({ addTodo, edit, handleEdit }) {
   const [todoTitle, setTodoTitle] = React.useState(edit ? edit.title : '');
+
+  const classes = useStyles();
 
   const handleSubmit = () => {
     addTodo(todoTitle);
@@ -44,7 +47,7 @@ function TodoForm({ addTodo, edit, handleEdit }) {
             onChange={(event) => setTodoTitle(event.target.value)}
             onKeyPress={handleKeyPress}
           />
-          <Button variant="outlined" onClick={handleSubmit}>
+          <Button variant="outlined" onClick={handleSubmit} className={classes.up}>
             Add Task
           </Button>
         </>
@@ -52,5 +55,11 @@ function TodoForm({ addTodo, edit, handleEdit }) {
     </div>
   );
 }
+
+TodoForm.propTypes = {
+  edit: PropTypes.string.isRequired,
+  addTodo: PropTypes.func.isRequired,
+  handleEdit: PropTypes.func.isRequired,
+};
 
 export default TodoForm;

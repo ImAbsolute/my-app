@@ -4,10 +4,12 @@ import { Button } from '@material-ui/core';
 import Task from './components/Task';
 import TodoForm from './components/TodoForm';
 import './App.css';
+import useStyles from './styles';
 
 function App() {
   const [todos, setTodos] = React.useState([]);
   const [appState, setAppState] = React.useState();
+  const classes = useStyles();
 
   React.useEffect(() => {
     axios.get(process.env.REACT_APP_API_URL).then((resp) => {
@@ -22,7 +24,6 @@ function App() {
   };
 
   React.useEffect(() => {
-    console.log(todos);
   }, [todos]);
 
   const addTodo = (todoTitle) => {
@@ -36,7 +37,6 @@ function App() {
         },
       ]);
     }
-    console.log(todos);
   };
 
   const deletTask = (id) => {
@@ -68,7 +68,7 @@ function App() {
           editTodo={editTodo}
         />
       </div>
-      <Button variant="outlined" onClick={getTasksFromServer}>
+      <Button variant="outlined" onClick={getTasksFromServer} className={classes.down}>
         Get tasks
       </Button>
     </div>
